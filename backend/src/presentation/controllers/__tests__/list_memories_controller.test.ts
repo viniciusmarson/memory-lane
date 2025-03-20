@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { ListMemoriesController } from '../list_memories_controller';
 import { ListMemoriesUseCase } from '@domain/use-cases/list_memories/list_memories_use_case';
-import { ListMemoriesResultResponseDTO } from '@application/use-cases/memories/list_memories/list_memories_response_dto';
 
 describe('ListMemoriesController', () => {
   let listMemoriesController: ListMemoriesController;
@@ -17,23 +16,58 @@ describe('ListMemoriesController', () => {
     response.json.mockReturnThis();
   });
 
-  it('should return 200 with jobs data on success', async () => {
+  it('should return 200 with memories data on success with default values', async () => {
+    const request = {};
+
+    const expectedMemories = {
+      memories: [
+        {
+          id: 1,
+          title: 'Memory 1',
+          description: 'Description 1',
+          filename: 'filename1.jpg',
+          url: 'https://example.com/filename1.jpg',
+          timestamp: new Date('2021-01-01'),
+        },
+      ],
+      total: 1,
+    };
+
+    listMemoriesUseCase.execute.mockResolvedValue(expectedMemories);
+
+    await listMemoriesController.handle(request as Request, response);
+
+    expect(response.status).toHaveBeenCalledWith(200);
+    expect(response.json).toHaveBeenCalledWith(expectedMemories);
+    expect(listMemoriesUseCase.execute).toHaveBeenCalledWith({
+      sort: 'oldest', // default sort
+      limit: 10, // default limit
+      page: 1, // default page
+    });
+  });
+
+  it('should return 200 with memories data on success with sort, page and limit', async () => {
     const request = {
       query: {
-        sort: 'newest',
+        sort: 'oldest',
+        page: 2,
+        limit: 15,
       },
     };
 
-    const expectedMemories = [
-      {
-        id: 1,
-        title: 'Memory 1',
-        description: 'Description 1',
-        filename: 'filename1.jpg',
-        url: 'https://example.com/filename1.jpg',
-        timestamp: new Date('2021-01-01'),
-      },
-    ] as ListMemoriesResultResponseDTO[];
+    const expectedMemories = {
+      memories: [
+        {
+          id: 1,
+          title: 'Memory 1',
+          description: 'Description 1',
+          filename: 'filename1.jpg',
+          url: 'https://example.com/filename1.jpg',
+          timestamp: new Date('2021-01-01'),
+        },
+      ],
+      total: 1,
+    };
 
     listMemoriesUseCase.execute.mockResolvedValue(expectedMemories);
 
@@ -43,42 +77,8 @@ describe('ListMemoriesController', () => {
     expect(response.json).toHaveBeenCalledWith(expectedMemories);
     expect(listMemoriesUseCase.execute).toHaveBeenCalledWith({
       sort: request.query.sort,
-    });
-  });
-
-  it('should throw ValidationError if page is missing', async () => {
-    const request = {
-      query: {
-        limit: 10,
-      },
-    };
-
-    await listJobsController.handle(request as Request, response);
-
-    expect(response.status).toHaveBeenCalledWith(400);
-    expect(response.json).toHaveBeenCalledWith({
-      error: {
-        message: 'Validation failed',
-        details: 'Invalid request page and limit are required',
-      },
-    });
-  });
-
-  it('should throw ValidationError if limit is missing', async () => {
-    const request = {
-      query: {
-        page: 1,
-      },
-    };
-
-    await listJobsController.handle(request as Request, response);
-
-    expect(response.status).toHaveBeenCalledWith(400);
-    expect(response.json).toHaveBeenCalledWith({
-      error: {
-        message: 'Validation failed',
-        details: 'Invalid request page and limit are required',
-      },
+      limit: request.query.limit,
+      page: request.query.page,
     });
   });
 
@@ -91,9 +91,9 @@ describe('ListMemoriesController', () => {
     };
 
     const error = new Error('Unexpected error');
-    listJobsUseCase.execute.mockRejectedValue(error);
+    listMemoriesUseCase.execute.mockRejectedValue(error);
 
-    await listJobsController.handle(request as Request, response);
+    await listMemoriesController.handle(request as Request, response);
 
     expect(response.status).toHaveBeenCalledWith(500);
     expect(response.json).toHaveBeenCalledWith({
