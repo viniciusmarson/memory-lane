@@ -1,19 +1,29 @@
 import { useCallback } from 'react'
+import { MemoryUpdate, NewMemory } from '../types/memory'
+import { useAlert } from '../hooks/useAlert'
 import { useNavigate } from 'react-router-dom'
 import MemoriesService from '../services/memories'
 import MemoryForm from '../components/forms/MemoryForm'
-import { NewMemory } from '../types/memory'
 
 export default function NewMemoryPage() {
   const navigate = useNavigate()
+  const { showAlert } = useAlert()
 
   const handleSubmit = useCallback(
-    async (memory: NewMemory) => {
-      await MemoriesService.createMemory(memory)
+    async (memory: NewMemory | MemoryUpdate) => {
+      if (!('image' in memory)) {
+        showAlert('Image is required', 'error', 3000)
+        return
+      }
 
-      navigate('/')
+      try {
+        await MemoriesService.createMemory(memory)
+        navigate('/')
+      } catch (error) {
+        showAlert('Error creating memory', 'error', 3000)
+      }
     },
-    [navigate]
+    [navigate, showAlert]
   )
 
   const handleCancel = useCallback(() => {

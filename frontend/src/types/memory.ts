@@ -11,6 +11,7 @@ export type NewMemory = {
   title: string
   description: string
   timestamp: string
+  image: File
 }
 
 export type PaginatedMemories = {
@@ -18,6 +19,10 @@ export type PaginatedMemories = {
   total: number
 }
 
-export type MemoryUpdate = Partial<NewMemory>
+export type MemoryUpdate = {
+  title: string
+  description: string
+  timestamp: string
+}
 
 export type Sort = 'newest' | 'oldest'

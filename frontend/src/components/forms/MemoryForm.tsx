@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { isNotValidDate, isFutureDate } from '../../utils/date'
 import { NewMemory, MemoryUpdate, Memory } from '../../types/memory'
 
 type MemoryFormProps = {
@@ -7,6 +8,9 @@ type MemoryFormProps = {
   onSubmit: (memory: NewMemory | MemoryUpdate) => Promise<void>
   onCancel: () => void
 }
+
+const ONE_MB = 1024 * 1024
+const MAX_FILE_SIZE = 5
 
 export default function MemoryForm({
   submitText,
@@ -20,6 +24,7 @@ export default function MemoryForm({
   const [timestamp, setTimestamp] = useState(
     memory?.timestamp || new Date().toISOString().split('T')[0]
   )
+  const [errors, setErrors] = useState<string | null>(null)
 
   const handleChangeTitle = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,14 +42,42 @@ export default function MemoryForm({
 
   const handleChangeImage = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setImage(e.target.files?.[0] || null)
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0]
+        const fileSizeMB = file.size / ONE_MB
+
+        if (fileSizeMB > MAX_FILE_SIZE) {
+          setErrors(
+            `File size exceeds ${MAX_FILE_SIZE}MB. File size: ${fileSizeMB.toFixed(
+              2
+            )} MB`
+          )
+          return
+        }
+
+        setErrors(null)
+        setImage(file)
+      }
     },
     [setImage]
   )
 
   const handleChangeTimestamp = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setTimestamp(e.target.value)
+      const dateString = e.target.value
+      setTimestamp(dateString)
+
+      if (isNotValidDate(dateString)) {
+        setErrors('Invalid date')
+        return
+      }
+
+      if (isFutureDate(dateString)) {
+        setErrors('Date cannot be in the future')
+        return
+      }
+
+      setErrors(null)
     },
     [setTimestamp]
   )
@@ -108,6 +141,8 @@ export default function MemoryForm({
         required
       />
 
+      {errors && <p className='text-red-500'>{errors}</p>}
+
       <div className='flex justify-end gap-2'>
         <button
           type='submit'
@@ -115,6 +150,7 @@ export default function MemoryForm({
         >
           {submitText}
         </button>
+
         <button
           type='button'
           onClick={handleCancel}

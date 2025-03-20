@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { Memory } from '../../types/memory'
-import { formatDate } from '../../utils/date_format'
+import { formatDate } from '../../utils/date'
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 
 type MemoryCardProps = Memory & {

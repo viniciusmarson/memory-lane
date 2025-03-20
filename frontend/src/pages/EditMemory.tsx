@@ -3,11 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import MemoriesService from '../services/memories'
 import MemoryForm from '../components/forms/MemoryForm'
 import { Memory, MemoryUpdate } from '../types/memory'
+import { useAlert } from '../hooks/useAlert'
 
 export default function EditMemoryPage() {
   const navigate = useNavigate()
   const { id } = useParams()
 
+  const { showAlert } = useAlert()
   const [memory, setMemory] = useState<Memory | null>(null)
 
   useEffect(() => {
@@ -19,11 +21,14 @@ export default function EditMemoryPage() {
     async (memory: MemoryUpdate) => {
       if (!id) return
 
-      await MemoriesService.updateMemory(Number(id), memory)
-
-      navigate('/')
+      try {
+        await MemoriesService.updateMemory(Number(id), memory)
+        navigate('/')
+      } catch (error) {
+        showAlert('Error updating memory', 'error', 3000)
+      }
     },
-    [navigate, id]
+    [navigate, id, showAlert]
   )
 
   const handleCancel = useCallback(() => {
