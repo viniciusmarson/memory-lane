@@ -6,3 +6,8 @@ export type Memory = {
   url: string;
   timestamp: Date;
 };
+
+export type PaginatedMemories = {
+  memories: Memory[];
+  total: number;
+};

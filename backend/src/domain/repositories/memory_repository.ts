@@ -1,9 +1,13 @@
-import { Memory } from '@domain/types/memory';
+import { Memory, PaginatedMemories } from '@domain/types/memory';
 
 export interface IMemoryRepository {
-  getMemories(sort: string): Promise<Memory[]>;
   getMemory(id: number): Promise<Memory>;
+  deleteMemory(id: number): Promise<void>;
   createMemory(memory: Partial<Memory>): Promise<void>;
   updateMemory(memory: Partial<Memory>): Promise<void>;
-  deleteMemory(id: number): Promise<void>;
+  getMemories(
+    sort: string,
+    page: number,
+    limit: number,
+  ): Promise<PaginatedMemories>;
 }

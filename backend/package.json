@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "kill": "kill -9 $(lsof -ti:1337)",
+    "kill": "kill -9 $(lsof -ti:4001)",
     "develop": "npx tsx watch src/presentation/http/server.ts",
     "start": "node ./build/src/presentation/http/server.js",
     "build": "tsc && tsc-alias",

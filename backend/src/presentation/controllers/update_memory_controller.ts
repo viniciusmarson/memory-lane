@@ -1,5 +1,4 @@
-import { HttpRequest } from '@presentation/interfaces/request';
-import { HttpResponse } from '@presentation/interfaces/response';
+import { HttpRequest, HttpResponse } from 'express';
 import { ErrorHandler } from '@presentation/errors/error_handler';
 import { UpdateMemoryUseCase } from '@domain/use-cases/update_memory/update_memory_use_case';
 

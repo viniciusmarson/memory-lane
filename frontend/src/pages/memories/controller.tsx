@@ -12,7 +12,12 @@ export const MemoriesPageController = (
   const navigate = useNavigate()
   const { showAlert } = useAlert()
   const [loading, setLoading] = useState(true)
+
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(5)
+  const [total, setTotal] = useState(0)
   const [sort, setSort] = useState<Sort>('oldest')
+
   const [memories, setMemories] = useState<Memory[]>([])
   const [error, setError] = useState<string | null>(null)
   const [deleteMemoryId, setDeleteMemoryId] = useState<number | null>(null)
@@ -21,8 +26,13 @@ export const MemoriesPageController = (
     setLoading(true)
     setError(null)
     try {
-      const memories = await MemoriesService.getMemories(sort)
+      const { memories, total } = await MemoriesService.getMemories(
+        sort,
+        page,
+        limit
+      )
       setMemories(memories)
+      setTotal(total)
     } catch (error) {
       setError(
         error instanceof Error ? error.message : 'An unknown error occurred'
@@ -30,7 +40,7 @@ export const MemoriesPageController = (
     } finally {
       setLoading(false)
     }
-  }, [sort])
+  }, [sort, page, limit])
 
   useEffect(() => {
     fetchMemories()
@@ -57,10 +67,11 @@ export const MemoriesPageController = (
       await MemoriesService.deleteMemory(deleteMemoryId)
       setDeleteMemoryId(null)
       showAlert('Memory deleted successfully', 'success', 3000)
+      fetchMemories()
     } catch (error) {
       showAlert('Failed to delete memory', 'error', 3000)
     }
-  }, [deleteMemoryId, showAlert])
+  }, [fetchMemories, deleteMemoryId, showAlert])
 
   const handleCancelDelete = useCallback(() => {
     setDeleteMemoryId(null)
@@ -71,9 +82,14 @@ export const MemoriesPageController = (
       loading,
       error,
       memories,
+      total,
       sort,
+      page,
+      limit,
       deleteMemoryId,
       setSort,
+      setPage,
+      setLimit,
       handleEdit,
       handleDelete,
       handleConfirmDelete,
@@ -83,9 +99,14 @@ export const MemoriesPageController = (
       loading,
       error,
       memories,
+      total,
       sort,
+      page,
+      limit,
       deleteMemoryId,
       setSort,
+      setPage,
+      setLimit,
       handleEdit,
       handleDelete,
       handleConfirmDelete,

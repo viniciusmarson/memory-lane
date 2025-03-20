@@ -1,7 +1,6 @@
 import { MemoriesPageContext } from '../context'
 import { useContextSelector } from 'use-context-selector'
 import MemoryCard from '../../../components/cards/MemoryCard'
-import { EllipsisHorizontalCircleIcon } from '@heroicons/react/24/outline'
 
 export default function MemoryList() {
   const error = useContextSelector(MemoriesPageContext, (s) => s.error)
@@ -23,19 +22,14 @@ export default function MemoryList() {
       {loading && <div className='text-center'>Loading...</div>}
       {error && <div className='text-center text-red-500'>{error}</div>}
 
-      <div className='flex flex-col md:flex-row gap-2 items-center'>
+      <div className='flex flex-wrap gap-8 justify-center md:justify-start'>
         {memories.map((memory) => (
-          <div
+          <MemoryCard
             key={memory.id}
-            className='flex flex-col md:flex-row gap-2 items-center'
-          >
-            <MemoryCard
-              {...memory}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-            <EllipsisHorizontalCircleIcon className='size-6' />
-          </div>
+            {...memory}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         ))}
       </div>
     </>

@@ -1,5 +1,12 @@
 import axios, { AxiosInstance } from 'axios'
-import { NewMemory, Memory, MemoryUpdate, Sort } from '../types/memory'
+
+import {
+  NewMemory,
+  Memory,
+  MemoryUpdate,
+  Sort,
+  PaginatedMemories,
+} from '../types/memory'
 
 class MemoriesService {
   private axiosInstance: AxiosInstance
@@ -10,9 +17,13 @@ class MemoriesService {
     })
   }
 
-  async getMemories(sort: Sort): Promise<Memory[]> {
+  async getMemories(
+    sort: Sort,
+    page: number,
+    limit: number
+  ): Promise<PaginatedMemories> {
     const response = await this.axiosInstance.get('/memories', {
-      params: { sort },
+      params: { sort, page, limit },
     })
     return response.data
   }
@@ -26,7 +37,12 @@ class MemoriesService {
     const formData = new FormData()
 
     Object.entries(memory).forEach(([key, value]) => {
-      if (value instanceof File) {
+      if (
+        value &&
+        typeof value === 'object' &&
+        'name' in value &&
+        'size' in value
+      ) {
         formData.append(key, value)
       } else {
         formData.append(key, String(value))

@@ -1,8 +1,6 @@
-import { HttpRequest } from '@presentation/interfaces/request';
-import { HttpResponse } from '@presentation/interfaces/response';
+import { HttpRequest, HttpResponse } from 'express';
 import { ErrorHandler } from '@presentation/errors/error_handler';
 import { CreateMemoryUseCase } from '@domain/use-cases/create_memory/create_memory_use_case';
-import { CreateMemoryRequestDTO } from '@domain/use-cases/create_memory/create_memory_request_dto';
 
 export class CreateMemoryController {
   constructor(private readonly createMemoryUseCase: CreateMemoryUseCase) {}

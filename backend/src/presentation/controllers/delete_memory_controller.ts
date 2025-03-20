@@ -1,6 +1,5 @@
+import { HttpRequest, HttpResponse } from 'express';
 import { ErrorHandler } from '@presentation/errors/error_handler';
-import { HttpRequest } from '@presentation/interfaces/request';
-import { HttpResponse } from '@presentation/interfaces/response';
 import { DeleteMemoryUseCase } from '@domain/use-cases/delete_memory/delete_memory_use_case';
 import { DeleteMemoryRequestDTO } from '@domain/use-cases/delete_memory/delete_memory_request_dto';
 

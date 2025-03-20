@@ -13,6 +13,11 @@ export type NewMemory = {
   timestamp: string
 }
 
+export type PaginatedMemories = {
+  memories: Memory[]
+  total: number
+}
+
 export type MemoryUpdate = Partial<NewMemory>
 
 export type Sort = 'newest' | 'oldest'

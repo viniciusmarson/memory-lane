@@ -1,6 +1,5 @@
+import { HttpRequest, HttpResponse } from 'express';
 import { ErrorHandler } from '@presentation/errors/error_handler';
-import { HttpRequest } from '@presentation/interfaces/request';
-import { HttpResponse } from '@presentation/interfaces/response';
 import { FindMemoryUseCase } from '@domain/use-cases/find_memory/find_memory_use_case';
 import { FindMemoryRequestDTO } from '@domain/use-cases/find_memory/find_memory_request_dto';
 
