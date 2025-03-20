@@ -1,5 +1,5 @@
-import { CubeIcon } from '@heroicons/react/20/solid'
 import { Outlet } from 'react-router-dom'
+import { CubeIcon } from '@heroicons/react/20/solid'
 import SharePageButton from '../components/buttons/SharePageButton'
 
 export default function AuthedLayout() {
@@ -9,21 +9,20 @@ export default function AuthedLayout() {
         <CubeIcon className='h-16 w-16 inline-block' />
       </div>
 
-      <div className='flex flex-col gap-4 p-4 w-full'>
+      <div className='flex flex-col gap-8 p-4 w-full'>
         <div className='flex justify-between items-center'>
-          <h1 className='text-4xl font-semibold text-gray-900 mb-4 mt-4'>
-            {/* TODO: Get user name when project is authenticated */}
-            User memory lane
-          </h1>
+          <div className='flex flex-col'>
+            <h1 className='text-4xl font-semibold text-gray-900 mb-4 mt-4'>
+              {/* TODO: Get user name when project is authenticated */}
+              Memory lane
+            </h1>
+            <p className='text-gray-500'>
+              {/* TODO: Get user description when project is authenticated */}
+              The best memories of your life get better when shared with others.
+            </p>
+          </div>
 
           <SharePageButton />
-        </div>
-
-        <div className='flex gap-2 border-2 border-gray-300 p-6 rounded-lg'>
-          <p className='text-gray-500'>
-            A text explaning the memories defined by the user. Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Quisquam, quos.
-          </p>
         </div>
 
         <Outlet />

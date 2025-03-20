@@ -27,32 +27,34 @@ export default function MemoryCard({
   }, [onDelete, id])
 
   return (
-    <div className='bg-white rounded-lg shadow-md overflow-hidden'>
-      <div className='relative h-48'>
+    <div className='flex flex-col max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm h-130 w-80'>
+      <div className='relative w-full h-64'>
         <img alt={filename} src={url} className='w-full h-full object-cover' />
       </div>
 
-      <div className='p-4'>
+      <div className='flex flex-col gap-2 p-5'>
         <h2 className='text-lg font-semibold mb-2'>{title}</h2>
         <p className='text-gray-600 mb-1'>{formatDate(timestamp)}</p>
         <p className='text-black'>{description}</p>
       </div>
 
-      <button
-        className='text-black bg-transparent px-4 py-2 flex items-center gap-2'
-        onClick={handleEdit}
-      >
-        <PencilIcon className='size-4' />
-        Edit
-      </button>
+      <div className='flex gap-2 mt-auto mb-2 justify-center'>
+        <button
+          className='text-black bg-transparent px-4 py-2 flex items-center gap-2'
+          onClick={handleEdit}
+        >
+          <PencilIcon className='size-4' />
+          Edit
+        </button>
 
-      <button
-        className='text-black bg-transparent px-4 py-2 flex items-center gap-2'
-        onClick={handleDelete}
-      >
-        <TrashIcon className='size-4' />
-        Delete
-      </button>
+        <button
+          className='text-black bg-transparent px-4 py-2 flex items-center gap-2'
+          onClick={handleDelete}
+        >
+          <TrashIcon className='size-4' />
+          Delete
+        </button>
+      </div>
     </div>
   )
 }

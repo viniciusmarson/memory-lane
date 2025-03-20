@@ -69,6 +69,8 @@ export default function PaginationControls() {
     return pages
   }, [totalPages, currentPage])
 
+  if (total === 0) return null
+
   return (
     <div className='flex flex-col items-center gap-4'>
       <div className='flex items-center gap-4'>
