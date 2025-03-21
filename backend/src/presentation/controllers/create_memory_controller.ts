@@ -28,7 +28,7 @@ export class CreateMemoryController {
         title,
         description,
         filename: request.file.filename,
-        url: `http://localhost:4001/uploads/${request.file.filename}`,
+        url: `${process.env.SERVER_DOMAIN}/uploads/${request.file.filename}`,
         timestamp,
       });
 
